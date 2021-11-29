@@ -13,17 +13,17 @@ data2: 新闻数据集
 | 50658 | 172601 | 152505(占比88.36%) | 4631 | 7 | 
 ### 结果
 data1
-| 模型 | F1 | Precision | Recall |
-| :-----: | :-----: | :----: | :----: | |
+| 模型 | F1 | Precision | Recall |  
+| :-----: | :-----: | :----: | :----: |  
 | one-hot + Bi-LSTM + CRF | 0.911 | 0.911 | 0.911 |  
 | word2vec + BiLSTM + CRF | 0.928 | 0.934 | 0.923 |  
 | Albert-tiny + CRF | 0.936 | 0.936 | 0.936 |  
 | BERT-base + CRF | 0.962 | 0.958 | 0.966 |  
 
 data2
-| 模型 | F1 | Precision | Recall |
-| :-----: | :-----: | :----: | :----: |
-| one-hot + Bi-LSTM + CRF | 0.856 | 0.873 | 0.840 |
+| 模型 | F1 | Precision | Recall |  
+| :-----: | :-----: | :----: | :----: |  
+| one-hot + Bi-LSTM + CRF | 0.856 | 0.873 | 0.840 |  
 | word2vec + BiLSTM + CRF | 0.895 | 0.908 | 0.882 |  
 | Albert-tiny + CRF | 0.936 | 0.899 | 0.882 |  
 | BERT-base + CRF | 0.944 | 0.942 | 0.947 |  
