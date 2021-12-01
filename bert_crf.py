@@ -70,13 +70,10 @@ def build_corpus(data_file, make_vocab=True):
 
     word_lists = []
     tag_lists = []
-#     cnt = 0
     with open(data_file, 'r', encoding='utf-8') as f:
         word_list = []
         tag_list = []
         for line in f:
-#             if cnt >= 182:
-#                 break
             if line != '\n':
                 word, tag = line.strip('\n').split()
                 word_list.append(word)
@@ -86,20 +83,15 @@ def build_corpus(data_file, make_vocab=True):
                 tag_lists.append(tag_list)
                 word_list = []
                 tag_list = []
-#                 cnt += 1
 
-    # 如果make_vocab为True，还需要返回token2id和tag2id
+    # 如果make_vocab为True，还需要返回tag2id
     if make_vocab:
-        token2id = build_map(word_lists,typ='token')
         tag2id = build_map(tag_lists,typ='tag')
-        return ["".join(i) for i in word_lists], tag_lists, token2id, tag2id
+        return ["".join(i) for i in word_lists], tag_lists, tag2id
     else:
         return ["".join(i) for i in word_lists], tag_lists
 def build_map(lists,typ):
-    if typ=='token':
-        maps = {PAD:0, UNK:1}
-    elif typ=='tag':
-        maps = {PAD:0, START_TAG:1, END_TAG:2}
+    maps = {PAD:0, START_TAG:1, END_TAG:2}
     else:
         print("typ not provided in build_map function")
         maps = {} 
@@ -180,7 +172,7 @@ def collate_fn(batch):
         return torch.LongTensor(pad_indice)
     max_length = max([len(i["input_ids"]) for i in batch])
   
-    token_ids_padded = padding([i["input_ids"] for i in batch], max_length, pad_idx=token2id[PAD])
+    token_ids_padded = padding([i["input_ids"] for i in batch], max_length, pad_idx=0)
     token_type_ids_padded = padding([i["token_type_ids"] for i in batch], max_length, pad_idx=0)
     att_mask_padded = padding([i["attention_mask"] for i in batch], max_length, pad_idx=0)
     target_ids_padded = padding([i["target_ids"] for i in batch], max_length - 2, pad_idx=tag2id[PAD]).transpose(0,1) # 不包含cls,sep位置
@@ -536,7 +528,6 @@ def main(args):
   global END_TAG
   global PAD
   global UNK
-  global token2id
   global tag2id
   global id2tag
   
@@ -555,7 +546,7 @@ def main(args):
 
   print("Loading data")
   # resume data1:
-  train_x, train_y, token2id, tag2id = build_corpus(data_file=args.trainset, make_vocab=True)
+  train_x, train_y, tag2id = build_corpus(data_file=args.trainset, make_vocab=True)
   dev_x, dev_y = build_corpus(data_file=args.devset, make_vocab=False)
   id2tag = {v:k for k,v in tag2id.items()}
   print("tag2id")
